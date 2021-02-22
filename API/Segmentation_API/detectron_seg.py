@@ -11,7 +11,10 @@ import cv2
 
 
 class Model:
-    def __init__(self,confidence_thresh=0.6):
+    def __init__(self,confidence_thresh=0.96):
+
+        confidence_thresh = 0.10
+
         cfg = get_cfg()
         cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = confidence_thresh  # set threshold for this model

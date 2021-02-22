@@ -17,4 +17,4 @@ if __name__ == '__main__':
 #     print(img.shape)
     response = requests.post('http://127.0.0.1:5000/',json={'image':img.tolist()})
     out = np.array(response.json()['output'])
-    plt.imsave(out_path+'/out.jpg',out.astype('uint8'))
+    plt.imsave(out_path+'/out.png',out.astype('uint8'), format='png')

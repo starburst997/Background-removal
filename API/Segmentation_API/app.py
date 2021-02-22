@@ -1,6 +1,6 @@
 from flask import Flask, jsonify,request,Response
 from segmentation import Model,Preprocessing
-# from detectron_seg import Model,Preprocessing
+#from detectron_seg import Model,Preprocessing
 import cv2
 import numpy as np
 import io

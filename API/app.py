@@ -34,8 +34,37 @@ def get_response(new_bg,data):
     h,w,_ = image.shape
     trimap = get_array(response.json()['trimap'])
     fg, bg, alpha = pred(image/255.0,trimap,matting_model)
-    combined = ((alpha[...,None]*image)).astype('uint8') + ((1-alpha)[...,None]*cv2.resize(new_bg,(w,h))).astype('uint8')
-    return jsonify({'output':combined.tolist()})
+
+    alpha = Image.fromarray((alpha*255).astype(np.uint8))
+    combined = Image.fromarray((image).astype(np.uint8))
+    combined.putalpha(alpha)
+
+    #combined = bg.astype('uint8')
+    #combined = (alpha[...,None]*image).astype('uint8')
+
+    #rgba = np.dstack((image, np.zeros(image.shape[:-1])))
+    #rgba *= alpha[...,None]
+    #combined = rgba.astype('uint8')
+
+    #rgba = np.dstack((image, np.zeros(image.shape[:-1])))
+
+    #out_img = np.zeros((h,w,4),dtype=np.uint8)
+    #out_img = alpha[...,None]*image
+
+    #out_img[:,:,:] = alpha[...,None]*image
+
+    #combined = (alpha * rgba).astype('uint8')
+
+    #combined = ((alpha[...,None]*image)).astype('uint8') #+ ((1-alpha)[...,None]*cv2.resize(new_bg,(w,h))).astype('uint8')
+
+    #combined = np.concatenate((alpha[...,None]*image, 1 - alpha[...,None]), axis=2).astype('uint8')
+
+    #b_channel, g_channel, r_channel = cv2.split(image)
+    #img_BGRA = cv2.merge((b_channel, g_channel, r_channel, alpha[...,None]))
+    #combined = img_BGRA.astype('uint8')
+
+    #return jsonify({'output':combined.tolist()})
+    return jsonify({'output':np.asarray(combined, dtype='uint8').tolist()})
 
 @app.route('/with_bg',methods=['POST'])
 def extraction():
@@ -46,7 +75,7 @@ def extraction():
 @app.route('/',methods=["POST"])
 def extraction_without_bg():
     data = request.get_json()
-    new_bg = cv2.imread('1.jpg')[:,:,::-1]
+    new_bg = cv2.imread('1.png')#[:,:,::-1]
     return get_response(new_bg,data)
         
     
